@@ -74,7 +74,7 @@ describe('Appolo e2e', () => {
             res.body.id.should.be.eq("www");
             res.body.name.should.be.eq("ValidationParamController");
         });
-        it.only('should call validations nested', async () => {
+        it('should call validations nested', async () => {
             let res = await request(app.handle)
                 .get('/test/nested')
                 .query({

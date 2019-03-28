@@ -12,9 +12,14 @@ export interface IMetadata {
     [index: string]: { options: ISchemaOptions, validations: { [index: string]: joi.Schema } }
 }
 
-export function schema(options?: ISchemaOptions) {
+interface ISchemaParams {
+    options?: ISchemaOptions,
+    append?: joi.Schema
+}
+
+export function schema(options?: ISchemaOptions, append?: joi.Schema) {
     return function (target: any) {
-        Reflect.defineMetadata(RouterModelOptionsSymbol, options, target)
+        Reflect.defineMetadata(RouterModelOptionsSymbol, {options, append}, target)
     }
 }
 
@@ -24,9 +29,9 @@ export function validate(schema: string | { [index: string]: joi.Schema } | ICla
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         if (Util.isClass(schema) && Reflect.hasMetadata(RouterModelSymbol, schema)) {
 
-            let opts = Util.getReflectData(RouterModelOptionsSymbol, schema);
+            let opts = Util.getReflectData<ISchemaParams>(RouterModelOptionsSymbol, schema) || {};
 
-            options = _.defaults({}, options, opts);
+            options = _.defaults({}, options, opts.options);
 
             schema = Util.getReflectData(RouterModelSymbol, schema)
         }
@@ -52,23 +57,39 @@ export function validate(schema: string | { [index: string]: joi.Schema } | ICla
     }
 }
 
+function createSchema(fn: IClass, type: "object" | "array") {
+
+    let schemaMap = Util.getReflectData<joi.SchemaMap>(RouterModelSymbol, fn);
+
+    let schema = type == "object" ? joi.object().keys(schemaMap) : joi.array().items(schemaMap);
+
+    let opts = Util.getReflectData<ISchemaParams>(RouterModelOptionsSymbol, fn) || {};
+
+    if (opts.append) {
+        schema = schema.concat(opts.append as any);
+    }
+
+    return schema;
+}
+
 export function param(schema: joi.Schema | IClass | [IClass], append?: joi.Schema): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 
         if (Util.isClass(schema)) {
-            schema = joi.object().keys(Util.getReflectData(RouterModelSymbol, schema))
+            schema = createSchema(schema as IClass, "object");
         }
 
         if (_.isArray(schema) && Util.isClass(schema[0])) {
-            schema = joi.array().items(Util.getReflectData(RouterModelSymbol, schema[0]))
+
+            schema = createSchema(schema[0] as IClass, "array");
         }
 
         if (append) {
-            schema = schema.concat(append);
+            schema = (schema as joi.Schema).concat(append as any);
         }
 
         let validations = Util.getReflectData<{ [index: string]: joi.Schema }>(RouterModelSymbol, target.constructor, {});
 
-        validations[propertyKey] = schema;
+        validations[propertyKey] = schema as joi.Schema;
     }
 }

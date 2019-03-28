@@ -121,7 +121,7 @@ describe('Appolo e2e', () => {
         });
 
 
-        it.only('should call validations nested', async () => {
+        it('should call validations nested', async () => {
 
             let res = await request(app.handle)
                 .get('/test/nested')
