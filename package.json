@@ -1,0 +1,44 @@
+{
+  "name": "@appolo/validation",
+  "version": "0.0.1",
+  "description": "appolo validation module",
+  "keywords": [
+    "appolo",
+    "view"
+  ],
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "appolo": "^6.0.63",
+    "joi": "^14.3.1",
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "sinon": "^7.3.1",
+    "sinon-chai": "^3.3.0",
+    "@types/chai-http": "^4.2.0",
+    "@types/joi": "^14.3.2",
+    "@types/sinon": "^7.0.10",
+    "@types/sinon-chai": "^3.2.2",
+    "chai-http": "^4.2.1",
+    "supertest": "^3.4.2",
+    "@types/supertest": "^2.0.7",
+    "@types/chai": "^4.1.7",
+    "@types/lodash": "^4.14.119",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "typescript": "^3.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shmoop207/appolo-module-validation.git"
+  },
+  "author": {
+    "name": "roman svichar"
+  },
+  "license": "MIT"
+}
