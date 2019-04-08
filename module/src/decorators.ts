@@ -72,14 +72,14 @@ function createSchema(fn: IClass, type: "object" | "array") {
     return schema;
 }
 
-export function param(schema: joi.Schema | IClass | [IClass], append?: joi.Schema): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
+export function param(schema: joi.Schema | joi.Schema[] | IClass | [IClass], append?: joi.Schema): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => any {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 
-        if (Util.isClass(schema)) {
+        if (Util.isClass(schema) && Reflect.hasMetadata(RouterModelSymbol, schema)) {
             schema = createSchema(schema as IClass, "object");
         }
 
-        if (_.isArray(schema) && Util.isClass(schema[0])) {
+        if (_.isArray(schema) && Util.isClass(schema[0] && Reflect.hasMetadata(RouterModelSymbol, schema))) {
 
             schema = createSchema(schema[0] as IClass, "array");
         }

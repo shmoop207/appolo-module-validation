@@ -47,10 +47,10 @@ function createSchema(fn, type) {
 }
 function param(schema, append) {
     return function (target, propertyKey, descriptor) {
-        if (appolo_1.Util.isClass(schema)) {
+        if (appolo_1.Util.isClass(schema) && Reflect.hasMetadata(exports.RouterModelSymbol, schema)) {
             schema = createSchema(schema, "object");
         }
-        if (_.isArray(schema) && appolo_1.Util.isClass(schema[0])) {
+        if (_.isArray(schema) && appolo_1.Util.isClass(schema[0] && Reflect.hasMetadata(exports.RouterModelSymbol, schema))) {
             schema = createSchema(schema[0], "array");
         }
         if (append) {
