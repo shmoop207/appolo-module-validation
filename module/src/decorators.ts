@@ -79,7 +79,7 @@ export function param(schema: joi.Schema | joi.Schema[] | IClass | [IClass], app
             schema = createSchema(schema as IClass, "object");
         }
 
-        if (_.isArray(schema) && Util.isClass(schema[0] && Reflect.hasMetadata(RouterModelSymbol, schema))) {
+        if (_.isArray(schema) && Util.isClass(schema[0]) && Reflect.hasMetadata(RouterModelSymbol, schema)) {
 
             schema = createSchema(schema[0] as IClass, "array");
         }

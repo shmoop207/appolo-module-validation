@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
 const chai = require("chai");
 const request = require("supertest");
 const appolo_1 = require("appolo");
+const index_1 = require("../../index");
+const decorators_1 = require("../../module/src/decorators");
 const should = chai.should();
 describe('Appolo Express Unit', () => {
     describe('validations', () => {
@@ -54,6 +57,28 @@ describe('Appolo Express Unit', () => {
                 "test2": 2
             });
         });
+    });
+    it("should validate nested object ", function () {
+        class Test3 {
+        }
+        tslib_1.__decorate([
+            index_1.param(index_1.joi.bool().required())
+        ], Test3.prototype, "c", void 0);
+        class Test2 {
+        }
+        tslib_1.__decorate([
+            index_1.param(Test3)
+        ], Test2.prototype, "b", void 0);
+        class Test1 {
+        }
+        tslib_1.__decorate([
+            index_1.param([Test2])
+        ], Test1.prototype, "a", void 0);
+        let schema = appolo_1.Util.getReflectData(decorators_1.RouterModelSymbol, Test1);
+        let result = index_1.joi.validate({ a: [{ b: { c: true } }] }, schema);
+        let result2 = index_1.joi.validate({ a: [{ b: { c: "aaa" } }] }, schema);
+        should.not.exist(result.error);
+        result2.error.toString().should.include('"c" must be a boolean');
     });
 });
 //# sourceMappingURL=validatorSpec.js.map

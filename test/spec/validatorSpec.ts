@@ -1,6 +1,8 @@
 import chai = require('chai');
 import request = require('supertest');
-import {App} from 'appolo';
+import {App, Util} from 'appolo';
+import {param, joi} from "../../index";
+import {RouterModelSymbol} from "../../module/src/decorators";
 
 const should = chai.should();
 
@@ -83,4 +85,34 @@ describe('Appolo Express Unit', () => {
         });
 
     });
+
+
+    it("should validate nested object ", function () {
+
+        class Test3 {
+            @param(joi.bool().required())
+            c: boolean
+        }
+
+        class Test2 {
+            @param(Test3)
+            b: Test3
+        }
+
+
+        class Test1 {
+            @param([Test2])
+            a: Test2[]
+        }
+
+        let schema = Util.getReflectData(RouterModelSymbol, Test1);
+
+        let result = joi.validate({a: [{b: {c: true}}]},schema);
+        let result2 = joi.validate({a: [{b: {c: "aaa"}}]},schema);
+
+        should.not.exist(result.error);
+
+        result2.error.toString().should.include('"c" must be a boolean');
+
+    })
 });

@@ -50,7 +50,7 @@ function param(schema, append) {
         if (appolo_1.Util.isClass(schema) && Reflect.hasMetadata(exports.RouterModelSymbol, schema)) {
             schema = createSchema(schema, "object");
         }
-        if (_.isArray(schema) && appolo_1.Util.isClass(schema[0] && Reflect.hasMetadata(exports.RouterModelSymbol, schema))) {
+        if (_.isArray(schema) && appolo_1.Util.isClass(schema[0]) && Reflect.hasMetadata(exports.RouterModelSymbol, schema[0])) {
             schema = createSchema(schema[0], "array");
         }
         if (append) {
