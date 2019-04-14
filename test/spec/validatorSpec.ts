@@ -84,6 +84,8 @@ describe('validations Unit', () => {
         });
     });
 
+});
+describe("Unit",function(){
 
     it("should validate nested object ", function () {
 
@@ -142,5 +144,6 @@ describe('validations Unit', () => {
         result3.error.toString().should.include('"test2" is required');
 
     });
+
 
 });

@@ -57,6 +57,8 @@ describe('validations Unit', () => {
             "test2": 2
         });
     });
+});
+describe("Unit", function () {
     it("should validate nested object ", function () {
         class Test3 {
         }
