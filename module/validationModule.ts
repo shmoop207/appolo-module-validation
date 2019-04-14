@@ -25,9 +25,12 @@ export class ValidationModule extends Module<IOptions> {
             _.forEach(c.metaData, (validations, key) => {
                 let route = Util.getRouteDefinition(c.fn, key);
 
-                opts = _.defaults({}, validations.options, opts);
+                if (route) {
+                    opts = _.defaults({}, validations.options, opts);
 
-                route.addHook(Hooks.PreMiddleware, validationMiddleware.bind(null, validations.validations, opts))
+                    route.addHook(Hooks.PreMiddleware, validationMiddleware.bind(null, validations.validations, opts))
+                }
+
 
             })
         })

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+require("./module/src/overrides");
 const validationModule_1 = require("./module/validationModule");
 exports.ValidationModule = validationModule_1.ValidationModule;
 const joi = require("joi");

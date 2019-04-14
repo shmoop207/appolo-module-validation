@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const appolo_1 = require("appolo");
-const joi = require("joi");
 const _ = require("lodash");
 exports.RouterModelSymbol = "__RouterModelDefinitions__";
 exports.RouterModelOptionsSymbol = "__RouterModelOptions__";
@@ -30,32 +29,47 @@ function validate(schema, validation, options) {
                 validations: {}
             };
         }
-        _.isObject(schema)
-            ? _.extend(validationRoute[propertyKey].validations, schema)
-            : validationRoute[propertyKey].validations[schema] = validation;
+        if (_.isObject(schema)) {
+            _.extend(validationRoute[propertyKey].validations, schema);
+        }
+        else {
+            validationRoute[propertyKey].validations[schema] = validation;
+        }
     };
 }
 exports.validate = validate;
-function createSchema(fn, type) {
-    let schemaMap = appolo_1.Util.getReflectData(exports.RouterModelSymbol, fn);
-    let schema = type == "object" ? joi.object().keys(schemaMap) : joi.array().items(schemaMap);
-    let opts = appolo_1.Util.getReflectData(exports.RouterModelOptionsSymbol, fn) || {};
-    if (opts.append) {
-        schema = schema.concat(opts.append);
-    }
-    return schema;
-}
-function param(schema, append) {
+// function createSchema(fn: IClass, type: "object" | "array") {
+//
+//     let schemaMap = Util.getReflectData<joi.SchemaMap>(RouterModelSymbol, fn);
+//
+//     let schema = type == "object" ? joi.object().keys(schemaMap) : joi.array().items(schemaMap);
+//
+//     let opts = Util.getReflectData<ISchemaParams>(RouterModelOptionsSymbol, fn) || {};
+//
+//     if (opts.append) {
+//         schema = schema.concat(opts.append as any);
+//     }
+//
+//     return schema;
+// }
+// function getSchema(schema: Schema | Schema[] | IClass | [IClass], append?: Schema): Schema {
+//     if (Util.isClass(schema) && Reflect.hasMetadata(RouterModelSymbol, schema)) {
+//         schema = createSchema(schema as IClass, "object");
+//     }
+//
+//     if (_.isArray(schema) && Util.isClass(schema[0]) && Reflect.hasMetadata(RouterModelSymbol, schema[0])) {
+//
+//         schema = createSchema(schema[0] as IClass, "array");
+//     }
+//
+//     if (append) {
+//         schema = (schema as joi.Schema).concat(append as any);
+//     }
+//     return schema as Schema;
+// }
+function param(schema) {
     return function (target, propertyKey, descriptor) {
-        if (appolo_1.Util.isClass(schema) && Reflect.hasMetadata(exports.RouterModelSymbol, schema)) {
-            schema = createSchema(schema, "object");
-        }
-        if (_.isArray(schema) && appolo_1.Util.isClass(schema[0]) && Reflect.hasMetadata(exports.RouterModelSymbol, schema[0])) {
-            schema = createSchema(schema[0], "array");
-        }
-        if (append) {
-            schema = schema.concat(append);
-        }
+        // schema = getSchema(schema, append);
         let validations = appolo_1.Util.getReflectData(exports.RouterModelSymbol, target.constructor, {});
         validations[propertyKey] = schema;
     };

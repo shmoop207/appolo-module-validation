@@ -3,7 +3,7 @@ import {ValidationModule} from "../../../../";
 
 export = async function (app: App) {
 
-    await app.module(ValidationModule)
+    await app.module(new ValidationModule({stripUnknown:true,}))
 }
 
 

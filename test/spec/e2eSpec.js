@@ -8,7 +8,7 @@ const chaiHttp = require("chai-http");
 let should = chai.should();
 chai.use(chaiHttp);
 chai.use(sinonChai);
-describe('Appolo e2e', () => {
+describe('validations e2e', () => {
     let app;
     beforeEach(async () => {
         app = appolo_1.createApp({
@@ -62,6 +62,15 @@ describe('Appolo e2e', () => {
             res.should.to.be.json;
             should.exist(res.body);
             res.body.test.should.be.eq("aaa");
+            res.body.name.should.be.eq("ValidationParamController");
+        });
+        it('should call validations param object', async () => {
+            let res = await request(app.handle)
+                .get('/test/validations/param_object?b=1&a[test]=aaa&a[test2]=2');
+            res.should.to.have.status(200);
+            res.should.to.be.json;
+            should.exist(res.body);
+            res.body.model.a.test.should.be.eq("aaa");
             res.body.name.should.be.eq("ValidationParamController");
         });
         it('should call validations param inherit', async () => {

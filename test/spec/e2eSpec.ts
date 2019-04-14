@@ -1,17 +1,18 @@
 import * as chai from 'chai';
+import * as _ from 'lodash';
 import * as request from 'supertest';
 import {App, createApp} from 'appolo';
 import sinon = require("sinon");
 import sinonChai = require("sinon-chai");
-import chaiHttp =require("chai-http");
+import chaiHttp = require("chai-http");
 import {joi} from "../../index";
+import {ValidationModel} from "../../test/mock/src/controllers/validationParamController";
 
 let should = chai.should();
 chai.use(chaiHttp);
 chai.use(sinonChai);
 
-
-describe('Appolo e2e', () => {
+describe('validations e2e', () => {
     let app: App;
 
     beforeEach(async () => {
@@ -103,6 +104,23 @@ describe('Appolo e2e', () => {
             res.body.name.should.be.eq("ValidationParamController");
         });
 
+
+        it('should call validations param object', async () => {
+
+            let res = await request(app.handle)
+                .get('/test/validations/param_object?b=1&a[test]=aaa&a[test2]=2');
+
+
+            res.should.to.have.status(200);
+            res.should.to.be.json;
+
+            should.exist(res.body);
+
+            res.body.model.a.test.should.be.eq("aaa");
+            res.body.name.should.be.eq("ValidationParamController");
+        });
+
+
         it('should call validations param inherit', async () => {
 
             let res = await request(app.handle)
@@ -126,8 +144,8 @@ describe('Appolo e2e', () => {
             let res = await request(app.handle)
                 .get('/test/nested')
                 .query({
-                    test2:{
-                        test:"1"
+                    test2: {
+                        test: "1"
                     }
                 });
 
@@ -137,11 +155,12 @@ describe('Appolo e2e', () => {
 
             should.exist(res.body);
 
-            res.body.model.should.be.deep.equal({ test2: { test: '1' } });
-
+            res.body.model.should.be.deep.equal({test2: {test: '1'}});
 
 
         });
+
+
 
 
     });

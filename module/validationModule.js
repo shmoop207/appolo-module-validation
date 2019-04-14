@@ -17,8 +17,10 @@ let ValidationModule = class ValidationModule extends index_1.Module {
         _.forEach(controllers, c => {
             _.forEach(c.metaData, (validations, key) => {
                 let route = index_1.Util.getRouteDefinition(c.fn, key);
-                opts = _.defaults({}, validations.options, opts);
-                route.addHook(index_1.Hooks.PreMiddleware, validationMiddleware_1.validationMiddleware.bind(null, validations.validations, opts));
+                if (route) {
+                    opts = _.defaults({}, validations.options, opts);
+                    route.addHook(index_1.Hooks.PreMiddleware, validationMiddleware_1.validationMiddleware.bind(null, validations.validations, opts));
+                }
             });
         });
     }

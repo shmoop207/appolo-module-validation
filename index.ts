@@ -1,4 +1,5 @@
 "use strict";
+import "./module/src/overrides"
 import {ValidationModule} from "./module/validationModule";
 import * as joi from 'joi';
 import {validate, param,schema} from "./module/src/decorators"

@@ -12,12 +12,12 @@ import {param, joi, validate} from "../../../../index";
 import {schema} from "../../../../module/src/decorators";
 
 
-class ValidationModel {
+export class ValidationModel {
     @param(joi.string().required())
     test: string;
 
     @param(joi.number().required())
-    test2: { aaa }
+    test2: number
 }
 
 
@@ -45,8 +45,6 @@ class Validation4Model {
 }
 
 
-
-
 @controller()
 export class ValidationParamController extends Controller {
 
@@ -57,6 +55,15 @@ export class ValidationParamController extends Controller {
         let model = this.getModel<ValidationModel>();
 
         res.json({test: model.test, name: this.constructor.name})
+    }
+
+    @get('/test/validations/param_object')
+    @validate({a: ValidationModel,b:joi.number().required()})
+    public validationObject(req: IRequest, res: IResponse) {
+
+        let model = this.getModel<ValidationModel>();
+
+        res.json({model: model, name: this.constructor.name})
     }
 
     @get('/test/validations/param2')
@@ -90,6 +97,8 @@ export class ValidationParamController extends Controller {
     public nested(req: IRequest, res: IResponse, model: Validation4Model, route) {
         res.json({model})
     }
+
+
 }
 
 

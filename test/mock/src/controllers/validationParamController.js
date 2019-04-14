@@ -12,6 +12,7 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     index_1.param(index_1.joi.number().required())
 ], ValidationModel.prototype, "test2", void 0);
+exports.ValidationModel = ValidationModel;
 class Validation2Model extends ValidationModel {
 }
 tslib_1.__decorate([
@@ -40,6 +41,10 @@ let ValidationParamController = class ValidationParamController extends appolo_1
         let model = this.getModel();
         res.json({ test: model.test, name: this.constructor.name });
     }
+    validationObject(req, res) {
+        let model = this.getModel();
+        res.json({ model: model, name: this.constructor.name });
+    }
     validation2(req, res, model, route) {
         res.json({ test: model.test, id: model.id, name: this.constructor.name });
     }
@@ -57,6 +62,10 @@ tslib_1.__decorate([
     appolo_1.get('/test/validations/param'),
     index_1.validate(ValidationModel)
 ], ValidationParamController.prototype, "validation", null);
+tslib_1.__decorate([
+    appolo_1.get('/test/validations/param_object'),
+    index_1.validate({ a: ValidationModel, b: index_1.joi.number().required() })
+], ValidationParamController.prototype, "validationObject", null);
 tslib_1.__decorate([
     appolo_1.get('/test/validations/param2'),
     index_1.validate(Validation2Model)
