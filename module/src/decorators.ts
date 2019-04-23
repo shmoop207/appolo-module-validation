@@ -30,7 +30,7 @@ export function schema(options?: ISchemaOptions, append?: joi.Schema) {
     }
 }
 
-export function validate(schema: string | { [index: string]: joi.Schema | IClass | (Schema | IClass)[] } | IClass, validation?: joi.Schema | IClass | ISchemaOptions, options?: ISchemaOptions): any {
+export function validate(schema: string | { [index: string]: joi.Schema | IClass | SchemaMap | (Schema | IClass)[] } | IClass, validation?: joi.Schema | IClass | ISchemaOptions, options?: ISchemaOptions): any {
 
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         if (Util.isClass(schema) && Reflect.hasMetadata(RouterModelSymbol, schema)) {
